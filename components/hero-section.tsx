@@ -3,7 +3,6 @@
 import ChartIcon from '@/assets/svgs/chart-icon';
 import type { PriceData } from '@/types/price';
 import axios from 'axios';
-import Link from 'next/link';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 
@@ -16,8 +15,8 @@ const HeroSection: FC = () => {
             try {
                 const { data } = await axios.get<PriceData>('/api/prices');
                 setPriceData(data);
-            } catch (error) {
-                console.error('Failed to fetch price:', error);
+            } catch {
+                //
             } finally {
                 setIsLoading(false);
             }
@@ -66,15 +65,7 @@ const HeroSection: FC = () => {
                                     <span className='text-white'>Được Cung Cấp Bởi AI</span>
                                 </p>
                             </div>
-
                             <p className='mx-auto max-w-xl text-lg leading-relaxed font-medium text-gray-400 sm:mx-0'>Nhận tín hiệu XAU/USD và Forex chính xác cao trong thời gian thực. Phân tích tự động 24/7, giúp bạn đưa ra quyết định giao dịch thông minh.</p>
-
-                            <div className='mt-2 flex w-full flex-col flex-wrap justify-center gap-4 sm:flex-row sm:justify-start'>
-                                <Link href='/dang-nhap' className='touch-action-manipulation flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-amber-500 px-8 text-sm font-bold text-black shadow-[0_0_20px_rgba(245,159,10,0.4)] transition-all hover:-translate-y-0.5 hover:bg-amber-600 hover:shadow-[0_0_30px_rgba(245,159,10,0.5)] focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none sm:w-auto'>
-                                    <span className='material-symbols-outlined text-lg'>send</span>Tham gia nhóm Telegram
-                                </Link>
-                            </div>
-
                             <div className='mt-2 flex items-center justify-center gap-8 border-t border-white/10 pt-6 sm:justify-start'>
                                 <div>
                                     <p className='text-3xl font-bold text-white'>90%+</p>

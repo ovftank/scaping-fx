@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { prisma } from '@/lib/prisma';
 import type { GetUsersResponse } from '@/types/api';
 import { NextResponse } from 'next/server';
 
@@ -47,10 +47,7 @@ const GET = async (request: Request) => {
         );
     } catch (error) {
         console.error('Get users error:', error);
-        return NextResponse.json(
-            { error: 'Đã xảy ra lỗi khi lấy danh sách người dùng' } as GetUsersResponse,
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Đã xảy ra lỗi khi lấy danh sách người dùng' } as GetUsersResponse, { status: 500 });
     }
 };
 

@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { prisma } from '@/lib/prisma';
 import type { DeleteUserResponse } from '@/types/api';
 import { NextResponse } from 'next/server';
 
@@ -28,10 +28,7 @@ const DELETE = async (request: Request, { params }: { params: Promise<{ id: stri
         }
 
         if (userId === payload.userId) {
-            return NextResponse.json(
-                { error: 'Không thể xóa tài khoản của chính mình' } as DeleteUserResponse,
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Không thể xóa tài khoản của chính mình' } as DeleteUserResponse, { status: 400 });
         }
 
         const user = await prisma.user.findUnique({
@@ -48,16 +45,10 @@ const DELETE = async (request: Request, { params }: { params: Promise<{ id: stri
             where: { id: userId }
         });
 
-        return NextResponse.json(
-            { success: true, message: 'Xóa người dùng thành công' } as DeleteUserResponse,
-            { status: 200 }
-        );
+        return NextResponse.json({ success: true, message: 'Xóa người dùng thành công' } as DeleteUserResponse, { status: 200 });
     } catch (error) {
         console.error('Delete user error:', error);
-        return NextResponse.json(
-            { error: 'Đã xảy ra lỗi khi xóa người dùng' } as DeleteUserResponse,
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Đã xảy ra lỗi khi xóa người dùng' } as DeleteUserResponse, { status: 500 });
     }
 };
 

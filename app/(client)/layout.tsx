@@ -16,45 +16,22 @@ const DOMAIN = process.env.DOMAIN ?? 'https://scapingfx.com';
 export const metadata: Metadata = {
     metadataBase: new URL(DOMAIN),
     title: {
-        default: 'ScapingFx — Tín hiệu Forex AI chính xác',
+        default: 'ScapingFx - Chuyên gia tín hiệu Vàng.',
         template: '%s | ScapingFx'
     },
-    description: 'Công cụ phân tích Forex powered by AI với độ chính xác cao. Tín hiệu giao dịch vàng, ngoại hối theo thời gian thực. Giải pháp trading thông minh cho nhà đầu tư hiện đại.',
-    applicationName: 'ScapingFx',
-    generator: 'Next.js',
-    referrer: 'origin-when-cross-origin',
-    keywords: ['forex signals', 'ai trading signals', 'tin hieu forex', 'tin hieu vang', 'tin hieu giao dich tu dong', 'fx trading vip', 'forex vietnam', 'dau tu forex', 'phan thi forex', 'scapingfx'],
-    authors: [{ name: 'ScapingFx Team', url: DOMAIN }],
-    creator: 'ScapingFx',
-    publisher: 'ScapingFx',
-    alternates: {
-        canonical: '/',
-        languages: {
-            vi: DOMAIN,
-            en: `${DOMAIN}/en`
-        }
-    },
+    description: 'Công cụ phân tích Forex powered by AI với độ chính xác cao. Tín hiệu giao dịch vàng theo thời gian thực. Giải pháp trading thông minh cho nhà đầu tư hiện đại.',
     openGraph: {
-        title: 'ScapingFx — Tín hiệu Forex AI chính xác',
-        description: 'Nền tảng tín hiệu giao dịch Forex bằng AI với độ chính xác vượt trội. Phân tích tự động vàng, ngoại hối 24/7. Bắt đầu trading thông minh ngay hôm nay.',
+        title: 'ScapingFx - Chuyên gia tín hiệu Vàng.',
+        description: 'Nền tảng tín hiệu giao dịch Forex bằng AI với độ chính xác vượt trội. Phân tích tự động vàng 24/7. Bắt đầu trading thông minh ngay hôm nay.',
         url: DOMAIN,
         siteName: 'ScapingFx',
         locale: 'vi_VN',
         type: 'website',
         images: [
             {
-                url: '/og-image.png',
-                width: 1200,
-                height: 630,
-                alt: 'ScapingFx — AI Trading Signals Platform'
+                url: '/og-image.png'
             }
         ]
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'ScapingFx — Tín hiệu Forex AI chính xác',
-        description: 'Nền tảng tín hiệu giao dịch Forex bằng AI với độ chính xác vượt trội. Phân tích tự động vàng, ngoại hối 24/7.',
-        images: ['/twitter-image.png']
     },
     robots: {
         index: true,

@@ -2,10 +2,6 @@
 
 import type { FC } from 'react';
 
-// TODO: YAGNI violation - Hardcoded data nên được fetch từ API
-// Cần tạo API endpoint: /api/trading/history để trả về lịch sử giao dịch thực tế
-// Hiện tại dùng data mẫu để demo
-
 const HistorySection: FC = () => {
     return (
         <section className='border-t border-white/5 bg-[#050505] py-24' id='history'>

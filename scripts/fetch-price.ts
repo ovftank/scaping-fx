@@ -1,8 +1,14 @@
 import { prisma } from '@/lib/prisma';
-import axios from 'axios';
 import type { VangTodayResponse } from '@/types/price';
+import axios from 'axios';
 
 const API_URL = 'https://www.vang.today/api/prices?type=XAUUSD';
+
+const getVietnamTime = (): string => {
+    const now = new Date();
+    const vietnamTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+    return vietnamTime.toISOString().replace('T', ' ').slice(0, 19);
+};
 
 const fetchPrice = async (): Promise<void> => {
     try {
@@ -22,7 +28,7 @@ const fetchPrice = async (): Promise<void> => {
         });
 
         if (existingPrice) {
-            console.log(`[${new Date().toISOString()}] Timestamp ${data.timestamp} already exists, skipping...`);
+            console.log(`[${getVietnamTime()}] Timestamp ${data.timestamp} already exists, skipping...`);
             return;
         }
 
@@ -40,7 +46,7 @@ const fetchPrice = async (): Promise<void> => {
             }
         });
 
-        console.log(`[${new Date().toISOString()}] Saved price: ${data.buy} (${data.time})`);
+        console.log(`[${getVietnamTime()}] Saved price: ${data.buy} (${data.time})`);
     } catch (error) {
         console.error('Failed to fetch price:', error);
     }

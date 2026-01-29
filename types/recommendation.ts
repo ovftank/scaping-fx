@@ -5,7 +5,6 @@ type ConfidenceLevel = 'STRONG' | 'MODERATE' | 'WEAK';
 interface Recommendation {
     signal: SignalType;
     confidence: ConfidenceLevel;
-    reasoning: string;
     currentPrice: number;
     targetPrice?: number;
     stopLoss?: number;
@@ -27,7 +26,6 @@ interface GenerateSignalInput {
 interface SignalOutput {
     signal: 'BUY' | 'SELL' | 'HOLD';
     confidence: 'STRONG' | 'MODERATE' | 'WEAK';
-    reasoning: string;
 }
 
 export type { ConfidenceLevel, GenerateSignalInput, Recommendation, SignalOutput, SignalType };

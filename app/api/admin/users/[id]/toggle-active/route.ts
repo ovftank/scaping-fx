@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { prisma } from '@/lib/prisma';
 import type { ToggleActiveResponse } from '@/types/api';
 import { NextResponse } from 'next/server';
 
@@ -22,17 +22,11 @@ const POST = async (request: Request, { params }: { params: Promise<{ id: string
         const userId = Number.parseInt(id, 10);
 
         if (Number.isNaN(userId)) {
-            return NextResponse.json(
-                { error: 'ID người dùng không hợp lệ' } as ToggleActiveResponse,
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'ID người dùng không hợp lệ' } as ToggleActiveResponse, { status: 400 });
         }
 
         if (userId === payload.userId) {
-            return NextResponse.json(
-                { error: 'Không thể thay đổi trạng thái của chính mình' } as ToggleActiveResponse,
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Không thể thay đổi trạng thái của chính mình' } as ToggleActiveResponse, { status: 400 });
         }
 
         const user = await prisma.user.findUnique({
@@ -40,10 +34,7 @@ const POST = async (request: Request, { params }: { params: Promise<{ id: string
         });
 
         if (!user) {
-            return NextResponse.json(
-                { error: 'Không tìm thấy người dùng' } as ToggleActiveResponse,
-                { status: 404 }
-            );
+            return NextResponse.json({ error: 'Không tìm thấy người dùng' } as ToggleActiveResponse, { status: 404 });
         }
 
         const updatedUser = await prisma.user.update({
@@ -65,10 +56,7 @@ const POST = async (request: Request, { params }: { params: Promise<{ id: string
         );
     } catch (error) {
         console.error('Toggle active error:', error);
-        return NextResponse.json(
-            { error: 'Đã xảy ra lỗi khi thay đổi trạng thái' } as ToggleActiveResponse,
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Đã xảy ra lỗi khi thay đổi trạng thái' } as ToggleActiveResponse, { status: 500 });
     }
 };
 

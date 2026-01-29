@@ -1,49 +1,51 @@
+import { signToken } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
-import type { LoginRequest, LoginResponse } from '@/types/api';
 import { NextResponse } from 'next/server';
-
-// TODO: response JWT token
 
 const POST = async (request: Request) => {
     try {
-        const body = (await request.json()) as LoginRequest;
+        const body = await request.json();
 
         const { username, password } = body;
 
         if (!username || !password) {
-            return NextResponse.json({ error: 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu' } as LoginResponse, { status: 400 });
+            return NextResponse.json({ error: 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu' }, { status: 400 });
         }
 
         const user = await prisma.user.findUnique({
-            where: { username }
+            where: { username: username, role: 'USER' }
         });
 
         if (!user) {
-            return NextResponse.json({ error: 'Tên đăng nhập hoặc mật khẩu không đúng' } as LoginResponse, { status: 401 });
+            return NextResponse.json({ error: 'Tài khoản không tồn tại' }, { status: 401 });
         }
 
         if (user.password !== password) {
-            return NextResponse.json({ error: 'Tên đăng nhập hoặc mật khẩu không đúng' } as LoginResponse, { status: 401 });
-        }
-
-        if (user.role === 'ADMIN') {
-            return NextResponse.json({ error: 'Đăng nhập không thành công' } as LoginResponse, { status: 403 });
+            return NextResponse.json({ error: 'Mật khẩu không đúng' }, { status: 401 });
         }
 
         if (!user.active) {
-            return NextResponse.json({ error: 'Tài khoản chưa được kích hoạt' } as LoginResponse, { status: 403 });
+            return NextResponse.json({ error: 'Tài khoản chưa được kích hoạt' }, { status: 403 });
         }
 
-        return NextResponse.json(
+        const token = await signToken({
+            userId: user.id,
+            username: user.username
+        });
+        const response = NextResponse.json(
             {
                 success: true,
                 message: 'Đăng nhập thành công'
-            } as LoginResponse,
-            { status: 200 }
+            },
+            {
+                status: 200
+            }
         );
+        response.cookies.set('token', token);
+        return response;
     } catch (error) {
         console.error('Login error:', error);
-        return NextResponse.json({ error: 'Đã xảy ra lỗi khi đăng nhập' } as LoginResponse, { status: 500 });
+        return NextResponse.json({ error: 'Đã xảy ra lỗi khi đăng nhập' }, { status: 500 });
     }
 };
 

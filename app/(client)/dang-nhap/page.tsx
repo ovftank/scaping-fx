@@ -2,23 +2,30 @@
 
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { FC } from 'react';
 import { useState } from 'react';
 
 const LoginPage: FC = () => {
+    const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    const handleSubmit = async (e: React.SubmitEvent): Promise<void> => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
         try {
-            await axios.post('/api/auth/login', { username, password });
+            const { data } = await axios.post('/api/auth/login', { username, password });
+
+            if (data.success) {
+                router.push('/dashboard');
+                router.refresh();
+            }
         } catch (error) {
             console.error('Login failed:', error);
             if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -73,7 +80,7 @@ const LoginPage: FC = () => {
                                 <span className='material-symbols-outlined text-gray-500'>lock</span>
                             </div>
                             <input id='password' type={showPassword ? 'text' : 'password'} placeholder='••••••••' required autoComplete='current-password' value={password} onChange={(e) => setPassword(e.target.value)} className='block w-full rounded-lg border border-white/10 bg-black/40 py-3 pr-10 pl-10 text-sm text-white placeholder-gray-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 focus:outline-none' />
-                            <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 transition-colors hover:text-amber-500'>
+                            <button type='button' tabIndex={-1} onClick={() => setShowPassword(!showPassword)} className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 transition-colors hover:text-amber-500'>
                                 <span className='material-symbols-outlined'>{showPassword ? 'visibility_off' : 'visibility'}</span>
                             </button>
                         </div>
@@ -91,10 +98,6 @@ const LoginPage: FC = () => {
                     <Link href='/dang-ki' className='w-full rounded-lg border border-amber-500/50 bg-transparent px-4 py-3 text-sm font-bold tracking-wider text-amber-500 uppercase transition-all hover:border-amber-500 hover:bg-amber-500/10 focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none'>
                         Đăng ký
                     </Link>
-                    <a href={process.env.NEXT_PUBLIC_TELEGRAM_URL} target='_blank' rel='noopener noreferrer' className='group inline-flex items-center justify-center gap-1 font-medium text-amber-500 transition-colors hover:text-amber-400'>
-                        <span>Tham gia Telegram để được hỗ trợ</span>
-                        <span className='material-symbols-outlined text-base transition-transform group-hover:translate-x-1'>arrow_forward</span>
-                    </a>
                 </div>
             </div>
         </div>

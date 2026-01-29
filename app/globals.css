@@ -10,7 +10,7 @@
 
 .bg-grid-pattern {
     background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-size: 40 40;
     mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
 }
@@ -24,6 +24,155 @@
 
 .bg-gradient-radial {
     background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer-text {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.animate-shimmer-text {
+    animation: shimmer-text 2s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+}
+
+@keyframes pulse-slow {
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-slow-delayed {
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+.animate-pulse-slow-delayed {
+    animation: pulse-slow-delayed 4s ease-in-out infinite;
+    animation-delay: 2s;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float-delayed {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20);
+    }
+}
+
+.animate-float-delayed {
+    animation: float-delayed 3s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+@keyframes float-delayed-more {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20);
+    }
+}
+
+.animate-float-delayed-more {
+    animation: float-delayed-more 3s ease-in-out infinite;
+    animation-delay: 2s;
+}
+
+@keyframes progress-bar {
+    0% {
+        width: 0%;
+    }
+    10% {
+        width: 15%;
+    }
+    30% {
+        width: 40%;
+    }
+    50% {
+        width: 60%;
+    }
+    70% {
+        width: 80%;
+    }
+    90% {
+        width: 95%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.animate-progress-bar {
+    animation: progress-bar 5s ease-in-out infinite;
+}
+
+#tv-attr-logo {
+    display: none !important;
 }
 
 @layer base {

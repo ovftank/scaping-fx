@@ -213,7 +213,7 @@ const AdminPage: FC = () => {
                             </label>
                             <div className='relative'>
                                 <input id='password' name='password' type={showPassword ? 'text' : 'password'} placeholder='••••••••' required autoComplete='current-password' value={loginForm.password} onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })} className='w-full rounded border border-white/20 bg-black px-3 py-2 pr-10 text-sm text-white placeholder-white/50 focus:border-white focus:outline-none' />
-                                <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute top-1/2 right-2 -translate-y-1/2 text-white/60 hover:text-white'>
+                                <button type='button' tabIndex={-1} onClick={() => setShowPassword(!showPassword)} className='absolute top-1/2 right-2 -translate-y-1/2 text-white/60 hover:text-white'>
                                     <span className='material-symbols-outlined text-sm'>{showPassword ? 'visibility_off' : 'visibility'}</span>
                                 </button>
                             </div>

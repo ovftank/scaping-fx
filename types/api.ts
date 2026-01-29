@@ -1,25 +1,3 @@
-interface RegisterRequest {
-    username: string;
-    password: string;
-}
-
-interface LoginRequest {
-    username: string;
-    password: string;
-}
-
-interface RegisterResponse {
-    success?: boolean;
-    message?: string;
-    error?: string;
-}
-
-interface LoginResponse {
-    success?: boolean;
-    message?: string;
-    error?: string;
-}
-
 interface AdminLoginRequest {
     username: string;
     password: string;
@@ -74,4 +52,9 @@ interface AdminSession {
     username: string;
 }
 
-export type { AdminLoginRequest, AdminLoginResponse, AdminSession, DeleteUserResponse, GetUsersResponse, JwtPayload, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, ToggleActiveResponse, User };
+interface UserSession {
+    id: number;
+    username: string;
+}
+
+export type { AdminLoginRequest, AdminLoginResponse, AdminSession, DeleteUserResponse, GetUsersResponse, JwtPayload, ToggleActiveResponse, User, UserSession };

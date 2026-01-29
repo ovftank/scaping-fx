@@ -1,16 +1,26 @@
-'use client';
-
+import { verifyToken } from '@/lib/jwt';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import type { FC } from 'react';
 
 const navigation = [
     { name: 'Tín hiệu', href: '/#live-signals' },
     { name: 'Hiệu suất', href: '/#history' },
-    { name: 'Công nghệ AI', href: '/#technology' },
-    { name: 'Hỗ trợ', href: '/#footer' }
+    { name: 'Công nghệ AI', href: '/#technology' }
 ];
 
-const Header: FC = () => {
+const Header: FC = async () => {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
+
+    let isAuthenticated = false;
+    if (token) {
+        const decoded = await verifyToken(token);
+        if (decoded?.userId) {
+            isAuthenticated = true;
+        }
+    }
+
     return (
         <header className='sticky top-0 z-50 w-full border-b border-white/10 bg-black/80 backdrop-blur-md'>
             <div className='mx-auto flex h-20 max-w-7xl items-center justify-between px-6'>
@@ -28,13 +38,28 @@ const Header: FC = () => {
                     ))}
                 </nav>
 
-                <div className='flex items-center gap-3'>
-                    <Link href='/dang-nhap' className='hidden rounded px-4 py-2 text-sm font-bold text-white transition-colors hover:text-amber-500 focus-visible:bg-white/5 focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:block'>
-                        Đăng nhập
-                    </Link>
-                    <Link href='/dang-ki' className='touch-action-manipulation flex h-10 items-center justify-center rounded-lg bg-amber-500 px-6 text-sm font-bold text-black shadow-[0_0_15px_rgba(245,159,10,0.3)] transition-all hover:bg-amber-600 hover:shadow-[0_0_25px_rgba(245,159,10,0.5)] focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none'>
-                        Đăng ký
-                    </Link>
+                <div className='flex items-center gap-4'>
+                    {isAuthenticated ? (
+                        <>
+                            <Link href='/dashboard' className='hidden rounded px-4 py-2 text-sm font-bold text-white transition-colors hover:text-amber-500 focus-visible:bg-white/5 focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:block'>
+                                Dashboard
+                            </Link>
+                            <form action='/api/auth/logout' method='POST'>
+                                <button type='submit' className='hidden items-center gap-1 rounded px-4 py-2 text-sm font-bold text-white transition-colors hover:text-amber-500 focus-visible:bg-white/5 focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:flex'>
+                                    <span className='material-symbols-outlined'>logout</span> Đăng xuất
+                                </button>
+                            </form>
+                        </>
+                    ) : (
+                        <>
+                            <Link href='/dang-nhap' className='hidden rounded px-4 py-2 text-sm font-bold text-white transition-colors hover:text-amber-500 focus-visible:bg-white/5 focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:block'>
+                                Đăng nhập
+                            </Link>
+                            <Link href='/dang-ki' className='touch-action-manipulation flex h-10 items-center justify-center rounded-lg bg-amber-500 px-6 text-sm font-bold text-black shadow-[0_0_15px_rgba(245,159,10,0.3)] transition-all hover:bg-amber-600 hover:shadow-[0_0_25px_rgba(245,159,10,0.5)] focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none'>
+                                Đăng ký
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </header>

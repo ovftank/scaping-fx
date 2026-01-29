@@ -16,8 +16,7 @@ export const metadata: Metadata = {
     title: {
         default: 'Admin | ScapingFx',
         template: '%s | Admin'
-    },
-    description: 'Trang quản trị ScapingFx'
+    }
 };
 
 import type { FC } from 'react';
@@ -25,9 +24,7 @@ import type { FC } from 'react';
 const AdminLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <html lang='vi' className={`${montserrat.variable} scroll-smooth antialiased`} suppressHydrationWarning>
-            <body className='bg-gray-900 text-white'>
-                {children}
-            </body>
+            <body className='bg-gray-900 text-white'>{children}</body>
         </html>
     );
 };
