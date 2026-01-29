@@ -1,13 +1,16 @@
 'use client';
-
-import type { Recommendation } from '@/types';
 import type { FC } from 'react';
-
-interface SignalCardProps {
-    recommendation: Recommendation;
+import { Recommendation } from '@/types/recommendation';
+interface DashboardProps {
+    recommendation: Recommendation ;
 }
 
-const SignalCard: FC<SignalCardProps> = ({ recommendation }) => {
+const Dashboard :FC<DashboardProps> = ({recommendation }) => {
+    const handleRefresh = (): void => {
+        window.location.reload();
+    };
+
+
     const getSignalInfo = () => {
         if (recommendation.signal === 'BUY') {
             return {
@@ -41,11 +44,22 @@ const SignalCard: FC<SignalCardProps> = ({ recommendation }) => {
             shadowColor: 'rgba(234, 179, 8, 0.3)'
         };
     };
-
     const signalInfo = getSignalInfo();
-
+    const error = 'Không thể tải tín hiệu giao dịch';
     return (
-        <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-2xl'>
+        <>
+            <div className='mb-6 flex justify-center sm:mb-8'>
+            <button
+                onClick={handleRefresh}
+                className='flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white transition-all hover:border-amber-500/50 hover:bg-amber-500/10 sm:w-auto sm:px-8'
+            >
+                <span className='material-symbols-outlined text-base'>refresh</span>
+                Làm mới tín hiệu
+            </button>
+        </div>
+
+        {recommendation ? (
+            <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-2xl'>
             {/* Animated Gradient Background */}
             <div className={`pointer-events-none absolute inset-0 bg-linear-to-br ${signalInfo.bgGradient} opacity-50`} />
 
@@ -147,7 +161,35 @@ const SignalCard: FC<SignalCardProps> = ({ recommendation }) => {
                 </div>
             </div>
         </div>
+        ) : (
+            <div className='glass-panel relative overflow-hidden rounded-2xl border border-red-500/30 bg-red-500/5 p-12'>
+            <div className='flex flex-col items-center gap-6 text-center'>
+                <div className='flex h-20 w-20 items-center justify-center rounded-full border-2 border-red-500/30 bg-red-500/10'>
+                    <span className='material-symbols-outlined text-5xl text-red-500'>error</span>
+                </div>
+                <div>
+                    <p className='text-2xl font-bold text-white'>Có lỗi xảy ra</p>
+                    <p className='mt-2 text-base text-gray-400'>{error}</p>
+                </div>
+                    <button
+                        onClick={handleRefresh}
+                        className='mt-4 flex items-center gap-2 rounded-lg bg-amber-500 px-8 py-3 text-sm font-bold text-black uppercase shadow-[0_0_20px_rgba(245,159,10,0.3)] transition-all hover:-translate-y-0.5 hover:bg-amber-600 hover:shadow-[0_0_30px_rgba(245,159,10,0.4)] focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none'
+                    >
+                        <span className='material-symbols-outlined text-lg'>refresh</span>
+                        Thử lại
+                    </button>
+                )
+            </div>
+        </div>
+        )}
+        </>
+
+
+
+
+
+
     );
 };
 
-export default SignalCard;
+export default Dashboard;
