@@ -2,10 +2,12 @@
 
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { FC } from 'react';
 import { useState } from 'react';
 
 const LoginPage: FC = () => {
+    const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +20,28 @@ const LoginPage: FC = () => {
         setIsLoading(true);
 
         try {
-            await axios.post('/api/auth/login', { username, password });
+            const { data } = await axios.post('/api/auth/login', { username, password });
+
+            if (data.success && data.token) {
+                // Set cookies for SSR
+                const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+                document.cookie = `auth_token=${data.token}; path=/; expires=${expires}; SameSite=Lax`;
+                document.cookie = `user_session=${JSON.stringify({ id: data.userId, username: data.username })}; path=/; expires=${expires}; SameSite=Lax`;
+
+                // Keep localStorage for client-side components
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem(
+                    'user_session',
+                    JSON.stringify({
+                        id: data.userId,
+                        username: data.username
+                    })
+                );
+
+                // Dispatch custom event to notify other components
+                window.dispatchEvent(new Event('auth-changed'));
+                router.push('/dashboard');
+            }
         } catch (error) {
             console.error('Login failed:', error);
             if (axios.isAxiosError(error) && error.response?.data?.error) {

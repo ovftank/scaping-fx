@@ -1,3 +1,4 @@
+import { verifyToken } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
 import type { GenerateSignalInput, Recommendation, SignalOutput } from '@/types/recommendation';
 import { NextResponse } from 'next/server';
@@ -13,9 +14,34 @@ const THRESHOLDS = {
     PERCENT: 0.05
 } as const;
 
-const GET = async (): Promise<NextResponse<Recommendation | { error: string; message: string }>> => {
+const GET = async (request: Request): Promise<NextResponse<Recommendation | { error: string; message: string }>> => {
     try {
-        // 1. Fetch latest price
+        // 1. Verify JWT token
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return NextResponse.json(
+                {
+                    error: 'Unauthorized',
+                    message: 'Missing or invalid authorization header'
+                },
+                { status: 401 }
+            );
+        }
+
+        const token = authHeader.substring(7);
+        const payload = await verifyToken(token);
+
+        if (!payload) {
+            return NextResponse.json(
+                {
+                    error: 'Unauthorized',
+                    message: 'Invalid or expired token'
+                },
+                { status: 401 }
+            );
+        }
+
+        // 2. Fetch latest price
         const latestPrice = await prisma.price.findFirst({
             orderBy: {
                 timestamp: 'desc'
@@ -35,7 +61,7 @@ const GET = async (): Promise<NextResponse<Recommendation | { error: string; mes
             );
         }
 
-        // 2. Fetch previous price (để tính trend/momentum)
+        // 3. Fetch previous price (để tính trend/momentum)
         const previousPrice = await prisma.price.findFirst({
             orderBy: {
                 timestamp: 'desc'
@@ -48,14 +74,14 @@ const GET = async (): Promise<NextResponse<Recommendation | { error: string; mes
             }
         });
 
-        // 3. Calculate metrics
+        // 4. Calculate metrics
         const buyPrice = latestPrice.buy;
         const changeBuy = latestPrice.change_buy;
         const changePercent = previousPrice
             ? ((buyPrice - previousPrice.buy) / previousPrice.buy) * 100
             : 0;
 
-        // 4. Generate signal
+        // 5. Generate signal
         const signal = generateSignal({
             buyPrice,
             changeBuy,
@@ -63,7 +89,7 @@ const GET = async (): Promise<NextResponse<Recommendation | { error: string; mes
             previousChangeBuy: previousPrice?.change_buy
         });
 
-        // 5. Build response
+        // 6. Build response
         const recommendation: Recommendation = {
             ...signal,
             currentPrice: buyPrice,
@@ -104,14 +130,14 @@ const generateSignal = (input: GenerateSignalInput): SignalOutput => {
             return {
                 signal: 'BUY',
                 confidence: 'STRONG',
-                reasoning: `Giá vàng tăng mạnh ${changeBuy.toFixed(2)} (+${changePercent.toFixed(2)}%). Momentum dương rõ rệt, khuyến nghị MUA MẠNH.`
+                reasoning: `Giá vàng tăng mạnh ${changeBuy.toFixed(2)} (+${changePercent.toFixed(2)}%). Momentum dương rõ rệt, khuyến nghị BUY mạnh.`
             };
         }
 
         return {
             signal: 'BUY',
             confidence: 'MODERATE',
-            reasoning: `Giá vàng tăng ${changeBuy.toFixed(2)} (+${changePercent.toFixed(2)}%). Xu hướng dương, khuyến nghị MUA.`
+            reasoning: `Giá vàng tăng ${changeBuy.toFixed(2)} (+${changePercent.toFixed(2)}%). Xu hướng dương, khuyến nghị BUY.`
         };
     }
 
@@ -127,14 +153,14 @@ const generateSignal = (input: GenerateSignalInput): SignalOutput => {
             return {
                 signal: 'SELL',
                 confidence: 'STRONG',
-                reasoning: `Giá vàng giảm mạnh ${Math.abs(changeBuy).toFixed(2)} (${changePercent.toFixed(2)}%). Momentum âm rõ rệt, khuyến nghị BÁN MẠNH.`
+                reasoning: `Giá vàng giảm mạnh ${Math.abs(changeBuy).toFixed(2)} (${changePercent.toFixed(2)}%). Momentum âm rõ rệt, khuyến nghị SELL mạnh.`
             };
         }
 
         return {
             signal: 'SELL',
             confidence: 'MODERATE',
-            reasoning: `Giá vàng giảm ${Math.abs(changeBuy).toFixed(2)} (${changePercent.toFixed(2)}%). Xu hướng âm, khuyến nghị BÁN.`
+            reasoning: `Giá vàng giảm ${Math.abs(changeBuy).toFixed(2)} (${changePercent.toFixed(2)}%). Xu hướng âm, khuyến nghị SELL.`
         };
     }
 
@@ -142,7 +168,7 @@ const generateSignal = (input: GenerateSignalInput): SignalOutput => {
     return {
         signal: 'HOLD',
         confidence: 'WEAK',
-        reasoning: `Thị trường đang sideway với thay đổi nhỏ ${changeBuy.toFixed(2)}. Không có tín hiệu rõ ràng, khuyến nghị GIỮ VỊ TRÍ.`
+        reasoning: `Thị trường đang sideway với thay đổi nhỏ ${changeBuy.toFixed(2)}. Không có tín hiệu rõ ràng, khuyến nghị HOLD.`
     };
 };
 

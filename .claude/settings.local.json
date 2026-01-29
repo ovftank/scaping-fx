@@ -20,7 +20,9 @@
       "mcp__context7__query-docs",
       "Bash(ls:*)",
       "mcp__context7__resolve-library-id",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Skill(ovf-flow:frontend-debug)",
+      "Bash(pnpm build:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

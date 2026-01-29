@@ -1,6 +1,6 @@
-'use client';
-
+import { cookies } from 'next/headers';
 import Link from 'next/link';
+import HeaderActions from '@/components/header-actions';
 import type { FC } from 'react';
 
 const navigation = [
@@ -10,7 +10,22 @@ const navigation = [
     { name: 'Hỗ trợ', href: '/#footer' }
 ];
 
-const Header: FC = () => {
+const Header: FC = async () => {
+    const cookieStore = await cookies();
+    const authToken = cookieStore.get('auth_token')?.value;
+
+    let userSession = null;
+    if (authToken) {
+        const userSessionCookie = cookieStore.get('user_session')?.value;
+        if (userSessionCookie) {
+            try {
+                userSession = JSON.parse(userSessionCookie);
+            } catch {
+                // Invalid JSON, ignore
+            }
+        }
+    }
+
     return (
         <header className='sticky top-0 z-50 w-full border-b border-white/10 bg-black/80 backdrop-blur-md'>
             <div className='mx-auto flex h-20 max-w-7xl items-center justify-between px-6'>
@@ -28,14 +43,7 @@ const Header: FC = () => {
                     ))}
                 </nav>
 
-                <div className='flex items-center gap-3'>
-                    <Link href='/dang-nhap' className='hidden rounded px-4 py-2 text-sm font-bold text-white transition-colors hover:text-amber-500 focus-visible:bg-white/5 focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:block'>
-                        Đăng nhập
-                    </Link>
-                    <Link href='/dang-ki' className='touch-action-manipulation flex h-10 items-center justify-center rounded-lg bg-amber-500 px-6 text-sm font-bold text-black shadow-[0_0_15px_rgba(245,159,10,0.3)] transition-all hover:bg-amber-600 hover:shadow-[0_0_25px_rgba(245,159,10,0.5)] focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none'>
-                        Đăng ký
-                    </Link>
-                </div>
+                <HeaderActions userSession={userSession} />
             </div>
         </header>
     );

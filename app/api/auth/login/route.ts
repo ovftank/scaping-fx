@@ -1,8 +1,7 @@
+import { signToken } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
 import type { LoginRequest, LoginResponse } from '@/types/api';
 import { NextResponse } from 'next/server';
-
-// TODO: response JWT token
 
 const POST = async (request: Request) => {
     try {
@@ -34,10 +33,18 @@ const POST = async (request: Request) => {
             return NextResponse.json({ error: 'Tài khoản chưa được kích hoạt' } as LoginResponse, { status: 403 });
         }
 
+        const token = await signToken({
+            userId: user.id,
+            username: user.username
+        });
+
         return NextResponse.json(
             {
                 success: true,
-                message: 'Đăng nhập thành công'
+                message: 'Đăng nhập thành công',
+                token,
+                userId: user.id,
+                username: user.username
             } as LoginResponse,
             { status: 200 }
         );

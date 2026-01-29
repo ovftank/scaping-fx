@@ -18,6 +18,9 @@ interface LoginResponse {
     success?: boolean;
     message?: string;
     error?: string;
+    token?: string;
+    userId?: number;
+    username?: string;
 }
 
 interface AdminLoginRequest {
@@ -74,4 +77,9 @@ interface AdminSession {
     username: string;
 }
 
-export type { AdminLoginRequest, AdminLoginResponse, AdminSession, DeleteUserResponse, GetUsersResponse, JwtPayload, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, ToggleActiveResponse, User };
+interface UserSession {
+    id: number;
+    username: string;
+}
+
+export type { AdminLoginRequest, AdminLoginResponse, AdminSession, DeleteUserResponse, GetUsersResponse, JwtPayload, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, ToggleActiveResponse, User, UserSession };
