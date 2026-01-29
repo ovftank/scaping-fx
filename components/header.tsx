@@ -13,16 +13,11 @@ const navigation = [
 const Header: FC = async () => {
     const cookieStore = await cookies();
     const authToken = cookieStore.get('auth_token')?.value;
-
     let userSession = null;
     if (authToken) {
         const userSessionCookie = cookieStore.get('user_session')?.value;
         if (userSessionCookie) {
-            try {
-                userSession = JSON.parse(userSessionCookie);
-            } catch {
-                // Invalid JSON, ignore
-            }
+            userSession = JSON.parse(userSessionCookie);
         }
     }
 

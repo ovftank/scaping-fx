@@ -27,13 +27,6 @@ const DELETE = async (request: Request, { params }: { params: Promise<{ id: stri
             });
         }
 
-        if (userId === payload.userId) {
-            return NextResponse.json(
-                { error: 'Không thể xóa tài khoản của chính mình' } as DeleteUserResponse,
-                { status: 400 }
-            );
-        }
-
         const user = await prisma.user.findUnique({
             where: { id: userId }
         });

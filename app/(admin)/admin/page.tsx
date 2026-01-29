@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 const AdminPage: FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
 
     const [authToken, setAuthToken] = useState<string | null>(() => {
         if (typeof window === 'undefined') return null;
@@ -45,11 +44,6 @@ const AdminPage: FC = () => {
                 }
             } catch (err) {
                 console.error('Fetch users failed:', err);
-                if (axios.isAxiosError(err) && err.response?.data?.error) {
-                    setError(err.response.data.error);
-                } else {
-                    setError('Không thể tải danh sách người dùng');
-                }
             } finally {
                 setIsLoading(false);
             }
@@ -93,11 +87,6 @@ const AdminPage: FC = () => {
             }
         } catch (err) {
             console.error('Admin login failed:', err);
-            if (axios.isAxiosError(err) && err.response?.data?.error) {
-                setLoginError(err.response.data.error);
-            } else {
-                setLoginError('Đăng nhập thất bại. Vui lòng thử lại.');
-            }
         } finally {
             setIsLoginLoading(false);
         }
@@ -118,11 +107,6 @@ const AdminPage: FC = () => {
             }
         } catch (err) {
             console.error('Fetch users failed:', err);
-            if (axios.isAxiosError(err) && err.response?.data?.error) {
-                setError(err.response.data.error);
-            } else {
-                setError('Không thể tải danh sách người dùng');
-            }
         }
     };
 
@@ -139,11 +123,6 @@ const AdminPage: FC = () => {
             await refreshUsers();
         } catch (err) {
             console.error('Toggle active failed:', err);
-            if (axios.isAxiosError(err) && err.response?.data?.error) {
-                alert(err.response.data.error);
-            } else {
-                alert('Không thể thay đổi trạng thái người dùng');
-            }
         }
     };
 
@@ -160,11 +139,7 @@ const AdminPage: FC = () => {
             await refreshUsers();
         } catch (err) {
             console.error('Delete user failed:', err);
-            if (axios.isAxiosError(err) && err.response?.data?.error) {
-                alert(err.response.data.error);
-            } else {
-                alert('Không thể xóa người dùng');
-            }
+
         }
     };
 
@@ -243,11 +218,7 @@ const AdminPage: FC = () => {
                     </div>
                 </div>
 
-                {error && (
-                    <div className='mb-4 border border-white/30 bg-white/10 px-4 py-2'>
-                        <p className='text-sm text-white'>{error}</p>
-                    </div>
-                )}
+
 
                 <div className='overflow-hidden rounded border border-white/10'>
                     <div className='overflow-x-auto'>
