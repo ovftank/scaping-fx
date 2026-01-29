@@ -2,9 +2,6 @@
 
 import type { FC } from 'react';
 
-// TODO: YAGNI violation - Hardcoded trading signals nên được fetch từ API
-// Cần tạo API endpoint: /api/signals/live để trả về tín hiệu giao dịch real-time
-// Hiện tại dùng data mẫu để demo
 
 const LiveSignalsSection: FC = () => {
     return (

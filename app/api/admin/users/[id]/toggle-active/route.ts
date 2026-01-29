@@ -28,13 +28,6 @@ const POST = async (request: Request, { params }: { params: Promise<{ id: string
             );
         }
 
-        if (userId === payload.userId) {
-            return NextResponse.json(
-                { error: 'Không thể thay đổi trạng thái của chính mình' } as ToggleActiveResponse,
-                { status: 400 }
-            );
-        }
-
         const user = await prisma.user.findUnique({
             where: { id: userId }
         });

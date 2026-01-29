@@ -14,7 +14,7 @@ const LoginPage: FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    const handleSubmit = async (e: React.SubmitEvent): Promise<void> => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
